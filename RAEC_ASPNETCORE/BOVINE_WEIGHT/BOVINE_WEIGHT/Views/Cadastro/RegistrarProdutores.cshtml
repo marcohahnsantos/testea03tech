@@ -1,0 +1,198 @@
+﻿@model Cadastro
+@using System.ComponentModel.DataAnnotations;
+    @using cloudscribe.Web.Pagination
+    <style>
+        body {
+            background-color: #81080A;
+        }
+    </style>
+    <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:1100px;">
+
+        <h2>Registrar Produtores</h2>
+        <br />
+        @{
+
+            var vId = 0;
+            var vDescricao = "";
+            var vCnpj = "";
+            var vCpf = "";
+            var vIe = "";
+            var vEndereco = "";
+            var vCidade = "";
+            var vBairro = "";
+            var vUf = "";
+            var vCep = "";
+            var vContato = "";
+            var vEmailContato = "";
+            var vFoneContato = "";
+            var vUnidadeUF = "";
+
+            try
+            {
+                vId = int.Parse(ViewBag.Registro.Id.ToString());
+                if (vId != 0)
+                {
+                    vDescricao = ViewBag.Registro.Descricao.ToString();
+                    vCnpj = ViewBag.Registro.CpfCnpj.ToString();
+                    vCpf = ViewBag.Registro.Cpf.ToString();
+                    vIe = ViewBag.Registro.Ie.ToString();
+                    vEndereco = ViewBag.Registro.Endereco.ToString();
+                    vCidade = ViewBag.Registro.Cidade.ToString();
+                    vBairro = ViewBag.Registro.Bairro.ToString();
+                    vUf = ViewBag.Registro.Uf.ToString();
+                    vCep = ViewBag.Registro.Cep.ToString();
+                    vContato = ViewBag.Registro.Contato.ToString();
+                    vEmailContato = ViewBag.Registro.EmailContato.ToString();
+                    vFoneContato = ViewBag.Registro.FoneContato.ToString();
+                }
+            }
+            catch
+            {
+
+            }
+        }
+        <script src="~/js/site.js"></script>
+        <form asp-controller="Cadastro" asp-action="RegistrarProdutor" autocomplete="on">
+            <input type="hidden" asp-for="Id" value="@vId" />
+            <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:25px; padding:15px;width:1050px;">
+                <table border="1">
+                    <thead>
+                        <tr style="background-color: cadetblue">
+                            <td width=200><label> CNPJ</label></td>
+                            <td width=150><label>CPF</label></td>
+                            <td width=150><label>Insc.Estadual</label></td>
+                            <td width=500><label>Produtor / Fornecedor</label></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td width=200>
+                                <input type="text" name="CpfCnpj" id="CpfCnpj" value="@vCnpj" onkeyup="FormataCnpj(this,event)"
+                                       onblur="if(!validarCNPJ(this.value)){alert('CNPJ Informado é inválido'); this.value='';}" maxlength="18" class="form-control input-md" ng-model="cadastro.cnpj"
+                                       onkeydown="return SomenteNumero(event)">
+                                <span asp-validation-for="CpfCnpj" class="text-danger"></span>
+                            </td>
+                            <td width=150>
+                                <input type="text" name="Cpf" id="Cpf" value="@vCpf" onkeyup="formatar('###.###.###-##', this)"
+                                       maxlength="14" class="form-control" onkeydown="return SomenteNumero(event)">
+                                <span asp-validation-for="Cpf" class="text-danger"></span>
+                            </td>
+                            <td width=150>
+                                <input type="text" name="Ie" id="Ie" value="@vIe"
+                                       maxlength="14" class="form-control" value="@vIe"
+                                       onkeydown="return SomenteNumero(event)">
+                                <span asp-validation-for="Ie" class="text-danger"></span>
+                            </td>
+                            <td width=500>
+                                <input type="text" name="Descricao" size="40" class="form-control" value="@vDescricao"></input>
+                                <span asp-validation-for="Descricao" class="text-danger"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table border="1">
+                    <thead>
+                        <tr style="background-color: cadetblue">
+                            <td width=450><label> Endereço</label></td>
+                            <td width=250><label>Bairro</label></td>
+                            <td width=300><label>Cidade</label></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td width=450>
+                                <input type="text" name="Endereco" size="40" class="form-control" value="@vEndereco"></input>
+                                <span asp-validation-for="Endereco" class="text-danger"></span>
+                            </td>
+                            <td width=250>
+                                <input type="text" name="Bairro" size="40" class="form-control" value="@vBairro"></input>
+                                <span asp-validation-for="Bairro" class="text-danger"></span>
+                            </td>
+                            <td width=300>
+                                <input type="text" name="Cidade" size="40" class="form-control" value="@vCidade"></input>
+                                <span asp-validation-for="Cidade" class="text-danger"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table border="1">
+                    <thead>
+                        <tr style="background-color: cadetblue">
+                            <td width=100><label> Cep</label></td>
+                            <td width=300><label>UF</label></td>
+                            <td width=150><label>Contato</label></td>
+                            <td width=300><label for="Email Contato">Email</label></td>
+                            <td width=150><label>Fone</label></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td width=100>
+                                <input type="text" name="Cep" id="Cep" value="@vCep" onkeyup="formatar('##.###-###', this)"
+                                       maxlength="10" class="form-control" onkeydown="return SomenteNumero(event)">
+                                <span asp-validation-for="Cep" class="text-danger"></span>
+                            </td>
+                            <td width=300>
+                                <select asp-for="Id_Uf" class="form-control">
+                                    @{
+                                        foreach (var item in (List<Cadastro>)ViewBag.ListaUf)
+                                        {
+                                            vUnidadeUF = item.SiglaUF + " - " + item.UnidadeUF;
+                                            if (item.SiglaUF != "RS")
+                                            {
+                                                <option value="@item.Id_Uf.ToString()">@vUnidadeUF.ToString()</option>
+                                            }
+                                            else
+                                            {
+                                                <option selected="selected" value="@item.Id_Uf.ToString()">@vUnidadeUF.ToString() </option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </td>
+                            <td width=150>
+                                <input type="text" name="Contato" size="10" class="form-control" value="@vContato"></input>
+                                <span asp-validation-for="Contato" class="text-danger"></span>
+                            </td>
+                            <td width=300>
+                                <input type="email" value="@vEmailContato" class="form-control" asp-for="EmailContato" required>
+                                <span asp-validation-for="EmailContato" class="text-danger"></span>
+                            </td>
+                            <td width=150>
+                                <input type="text" width:50px rows="3" name="FoneContato" size="40" class="form-control"
+                                       value="@vFoneContato" onkeypress="mascarat(this)" maxlength="14"
+                                       onkeydown="return SomenteNumero(event)"></input>
+                                <span asp-validation-for="FoneContato" class="text-danger"></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:500px;">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width:50px"><button type="submit" class="btn btn-block btn-success">Registrar Produtores</button></td>
+                                @if (ViewBag.Editar == "SIM")
+                                {
+                                    <td style="width:50px"><button type="button" class="btn btn-block btn-primary" onclick="VoltarEditar()">Voltar</button></td>
+                                }
+                                else
+                                {
+                                    <td style="width:50px"><button type="button" class="btn btn-block btn-primary" onclick="Voltar()">Voltar</button></td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        function Voltar() {
+            window.location.href = "../Cadastro/IndexProdutor"
+        }
+        function VoltarEditar() {
+            window.location.href = "../IndexProdutor"
+        }
+
+    </script>

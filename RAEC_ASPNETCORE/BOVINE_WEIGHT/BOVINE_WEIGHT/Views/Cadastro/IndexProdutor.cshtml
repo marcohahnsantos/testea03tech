@@ -1,0 +1,115 @@
+﻿@model Cadastro
+@using System.ComponentModel.DataAnnotations;
+@using PagedList;
+@using PagedList.Core.Mvc;
+@using cloudscribe.Web.Pagination;
+    <link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+    @{
+        ViewData["Title"] = "Produtor";
+    }
+    @*<style>
+            body {
+                background-image: url('../../images/Bg.png')
+            }
+        </style>*@
+    <style>
+        body {
+            background-color: #81080A;
+        }
+    </style>
+
+    <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:1100px;">
+        <form asp-controller="Cadastro" asp-action="RegistrarProdutores">
+            <h3>Produtores</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>#</th>
+                        <th>CÓDIGO</th>
+                        <th>CNPJ/CPF</th>
+                        <th>PRODUTOR</th>
+                        <th>ENDEREÇO</th>
+                        <th>CIDADE</th>
+                        <th>UF</th>
+                    </tr>
+                </thead>
+                @{
+                    foreach (var item in (List<Cadastro>)ViewBag.ListaCadastro)
+                    {
+                        <tbody>
+                            <tr>
+                                @{
+                                    if (@item.Id != 0)
+                                    {
+                                        <td style="width=50px"><button type="button" class="btn btn-success" onclick="Editar(@item.Id.ToString())">Editar</button></td>
+                                        <td style="width=50px"><button type="button" class="btn btn-danger" onclick="ExcluirRegistro(@item.Id.ToString())">Excluir</button></td>
+                                        <td style="width=50px">@item.Id.ToString()</td>
+                                        <td style="width=150px">@item.CpfCnpj.ToString().PadLeft(18, ' ')</td>
+                                        <td style="width=400px">@item.Descricao.ToString()</td>
+                                        <td style="width=400px">@item.Endereco.ToString()</td>
+                                        <td style="width=150px">@item.Cidade.ToString()</td>
+                                        <td style="width=50px">@item.Uf.ToString().Substring(0, 2)</td>
+                                    }
+                                }
+                            </tr>
+                        </tbody>
+                    }
+                }
+            </table>
+        </form>
+    </div>
+
+    <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:1100px;">
+        <table class="table table-bordered" align="center" style="width:500px;">
+            <tbody>
+                <tr>
+                    <td style="width:50px"><button type="button" class="btn btn-block btn-primary" onclick="CriarRegistro()">Criar Registro Produtor</button></td>
+                    @if (ViewBag.Editar == "SIM")
+                    {
+                        <td style="width:50px"><button type="button" class="btn btn-block btn-primary" onclick="VoltarEditar()">Voltar</button></td>
+                    }
+                    else
+                    {
+                        <td style="width:50px"><button type="button" class="btn btn-block btn-primary" onclick="Voltar()">Voltar</button></td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <form>
+        <div>
+            <cs-pager cs-paging-pagesize="10"
+                      cs-paging-pagenumber="@ViewBag.CurrentPage"
+                      cs-paging-totalitems="@ViewBag.TotalItems"
+                      cs-pagenumber-param="page"
+                      cs-show-first-last="true"
+                      cs-suppress-empty-nextprev="true"
+                      cs-suppress-inactive-firstlast="true"
+                      cs-first-page-text="Primeiro"
+                      cs-last-page-text="Ultimo"
+                      cs-pager-li-current-class="active"
+                      cs-pager-li-non-active-class="disabled"
+                      asp-controller="Cadastro"
+                      asp-action="IndexProdutor">
+            </cs-pager>
+
+        </div>
+
+    </form>
+
+    <script>
+        function CriarRegistro() {
+            window.location.href = "../Cadastro/RegistrarProdutores"
+        }
+        function Voltar() {
+            window.location.href = "../Home/Menu"
+        }
+        function ExcluirRegistro(id_conta) {
+            window.location.href = "../Cadastro/ExcluirRegistroProdutor/" + id_conta;
+        }
+        function Editar(id_conta) {
+            window.location.href = "../Cadastro/RegistrarProdutores/" + id_conta;
+        }
+    </script>
+

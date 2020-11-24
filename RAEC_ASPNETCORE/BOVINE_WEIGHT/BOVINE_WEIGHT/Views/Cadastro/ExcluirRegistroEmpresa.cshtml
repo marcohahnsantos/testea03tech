@@ -1,0 +1,53 @@
+﻿
+    <style>
+        body {
+            background-color: #81080A;
+        }
+    </style>
+
+    <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:25px; padding:15px;width:400px;">
+
+        <h3>Deseja Excluir a Empresa Selecionada?</h3>
+        <p><strong>Data:</strong> @ViewBag.Registro.Data.ToString()</p>
+        <p><strong>CNPJ:</strong> @ViewBag.Registro.CpfCnpj.ToString()</p>
+        <p><strong>Empresa:</strong> @ViewBag.Registro.Descricao.ToString()</p>
+        <p><strong>Endereco:</strong> @ViewBag.Registro.Endereco.ToString()</p>
+        <p><strong>Cidade:</strong> @ViewBag.Registro.Cidade.ToString()</p>
+        <p><strong>Uf:</strong> @ViewBag.Registro.Uf.ToString()</p>
+        @{
+            var vId = 0;
+
+            try
+            {
+                vId = int.Parse(ViewBag.Registro.Id.ToString());
+            }
+            catch { }
+        }
+        <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:350px;">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td style="width:50px"><button type="button" onclick="Cancelar()" class="btn btn-block btn-default">Cancelar</button></td>
+                        <td style="width:50px"> <button type="button" onclick="Excluir(@vId)" class="btn btn-block btn-danger">Excluir</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        @*<div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:25px; padding:15px;width:400px;">
+            <button type="button" onclick="Cancelar()" class="btn btn-block btn-default">Cancelar</button>
+            <button type="button" onclick="Excluir(@vId)" class="btn btn-block btn-danger">Excluir</button>
+        </div>*@
+    </div>
+    <script>
+        function Excluir(id) {
+            window.location.href = "../ExcluirEmpresa/" + id;
+
+        }
+        function Cancelar() {
+            window.location.href = "../IndexEmpresa";
+        }
+
+    </script>
+

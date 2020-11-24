@@ -1,0 +1,181 @@
+﻿@model Cadastro
+@*<style>
+        body {
+            background-image: url('../../images/Bg.png')
+        }
+    </style>*@
+<style>
+    body {
+        background-color: #81080A;
+    }
+</style>
+<div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:1000px;">
+
+    <h2>Registrar Empresa</h2>
+    <br />
+    @{
+
+        var vId = 0;
+        var vDescricao = "";
+        var vCnpj = "";
+        var vEndereco = "";
+        var vCidade = "";
+        var vUf = "";
+        var vContato = "";
+        var vEmailContato = "";
+        var vFoneContato = "";
+        var vCelularContato = "";
+        var vUnidadeUF = "";
+
+        try
+        {
+            vId = int.Parse(ViewBag.Registro.Id.ToString());
+            if (vId != 0)
+            {
+                vDescricao = ViewBag.Registro.Descricao.ToString();
+                vCnpj = ViewBag.Registro.CpfCnpj.ToString();
+                vEndereco = ViewBag.Registro.Endereco.ToString();
+                vCidade = ViewBag.Registro.Cidade.ToString();
+                vUf = ViewBag.Registro.Uf.ToString();
+                vContato = ViewBag.Registro.Contato.ToString();
+                vEmailContato = ViewBag.Registro.EmailContato.ToString();
+                vFoneContato = ViewBag.Registro.FoneContato.ToString();
+                vCelularContato = ViewBag.Registro.CelularContato.ToString();
+            }
+        }
+        catch
+        {
+
+        }
+    }
+    <script src="~/js/site.js"></script>
+    <form asp-controller="Cadastro" asp-action="Registrar" autocomplete="on">
+        <input type="hidden" asp-for="Id" value="@vId" />
+        <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:25px; padding:15px;width:950px;">
+            <table  border="1">
+                <thead>
+                    <tr style="background-color: cadetblue">
+                        <td width=300><label>CNPJ</label></td>
+                        <td width=600><label >Empresa</label></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width=300>
+                            <input type="text" name="CpfCnpj" id="CpfCnpj" value="@vCnpj" onkeyup="FormataCnpj(this,event)"
+                                   onblur="if(!validarCNPJ(this.value)){alert('CNPJ Informado é inválido'); this.value='';}" maxlength="18" class="form-control input-md" ng-model="cadastro.cnpj" required
+                                   onkeydown="return SomenteNumero(event)">
+                            <span asp-validation-for="CpfCnpj" class="text-danger"></span>
+                        </td>
+                        <td width=600>
+                            <input type="text"  name="Descricao" size="40" class="form-control" value="@vDescricao"></input>
+                            <span asp-validation-for="Descricao" class="text-danger"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table border="1">
+                <thead>
+                    <tr style="background-color: cadetblue">
+                        <td width=400><label >Endereço</label></td>
+                        <td width=200><label >Cidade</label></td>
+                        <td width=300><label >UF</label></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width=400>
+                            <input type="text"  name="Endereco" size="40" class="form-control" value="@vEndereco"></input>
+                            <span asp-validation-for="Endereco" class="text-danger"></span>
+                        </td>
+                        <td width=200>
+                            <input type="text" name="Cidade" size="40" class="form-control" value="@vCidade"></input>
+                            <span asp-validation-for="Cidade" class="text-danger"></span>
+                        </td>
+                        <td width=300>
+                            <select asp-for="Id_Uf" class="form-control">
+                                @{
+                                    foreach (var item in (List<Cadastro>)ViewBag.ListaUf)
+                                    {
+                                        vUnidadeUF = item.SiglaUF + " - " + item.UnidadeUF;
+                                        if (item.SiglaUF != "RS")
+                                        {
+                                            <option value="@item.Id_Uf.ToString()">@vUnidadeUF.ToString()</option>
+                                        }
+                                        else
+                                        {
+                                            <option selected="selected" value="@item.Id_Uf.ToString()">@vUnidadeUF.ToString() </option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table border="1">
+                <thead>
+                    <tr style="background-color: cadetblue">
+                        <td width=200><label>Contato</label></td>
+                        <td width=400 ><label for="Email Contato">Email</label></td>
+                        <td width=150><label>Fone Contato</label></td>
+                        <td width=150><label>Celular Contato</label></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width=200>
+                            <input type="text" name="Contato" size="10" class="form-control" value="@vContato"></input>
+                            <span asp-validation-for="Contato" class="text-danger"></span>
+                        </td>
+                        <td width=400>
+                            <input type="email" value="@vEmailContato" class="form-control" asp-for="EmailContato" required>
+                            <span asp-validation-for="EmailContato" class="text-danger"></span>
+                        </td>
+                        <td width=150>
+                            <input type="text" width:50px rows="3" name="FoneContato" size="40" class="form-control"
+                                   value="@vFoneContato" onkeypress="mascarat(this)" maxlength="14"
+                                   onkeydown="return SomenteNumero(event)"></input>
+                            <span asp-validation-for="FoneContato" class="text-danger"></span>
+                        </td>
+                        <td width=150>
+                            <input type="text" width:50px rows="3" name="CelularContato" size="40"
+                                   class="form-control" value="@vCelularContato" onkeypress="mascarac(this)"
+                                   maxlength="15" onkeydown="return SomenteNumero(event)"></input>
+                            <span asp-validation-for="CelularContato" class="text-danger"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:500px;">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td style="width:50px"><button type="submit" class="btn btn-block btn-success">Registrar</button></td>
+                            @if (ViewBag.Editar == "SIM")
+                            {
+                                <td style="width:50px"><button type="button" class="btn btn-block btn-primary" onclick="VoltarEditar()">Voltar</button></td>
+                            }
+                            else
+                            {
+                                <td style="width:50px"><button type="button" class="btn btn-block btn-primary" onclick="Voltar()">Voltar</button></td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</form>
+</div>
+<script>
+    function Voltar() {
+        window.location.href = "../Cadastro/IndexEmpresa"
+    }
+    function VoltarEditar() {
+        window.location.href = "../IndexEmpresa"
+    }
+
+    
+</script>
+
+

@@ -1,0 +1,162 @@
+﻿@model AbateModel
+@*<style>
+        body {
+            background-image: url('../../images/Bg.png')
+        }
+    </style>*@
+<style>
+    body {
+        background-color: #81080A;
+    }
+</style>
+<div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:700px;">
+
+    <h2>Registrar Novo Abate</h2>
+    <br />
+    @{
+        var vData = DateTime.Parse(System.DateTime.Now.ToString()).ToString("yyyy-MM-dd");
+        var vHora = DateTime.Parse(System.DateTime.Now.ToString()).ToString("HH-MM");
+        var vHoraAbate = "";
+        var vId = 0;
+        var vIdEmpresa = 0;
+        var vEmpresa = "";
+        var vIdProdutor = 0;
+        var vProdutor = "";
+        var vQuantidade = "";
+
+
+        try
+        {
+            vId = int.Parse(ViewBag.Registro.Id.ToString());
+            if (vId != 0)
+            {
+                vEmpresa = ViewBag.Registro.Nome_Empresa.ToString();
+                vIdEmpresa = int.Parse(ViewBag.Registro.id_Empresa.ToString());
+                vProdutor = ViewBag.Registro.Nome_Produtor.ToString();
+                vIdProdutor = int.Parse(ViewBag.Registro.id_Produtor.ToString());
+                vQuantidade = ViewBag.Registro.Quantidade.ToString();
+                vData = DateTime.Parse(ViewBag.Registro.Data_Abate).ToString("yyyy-MM-dd");
+                vHora = DateTime.Parse(ViewBag.Registro.Data_Abate).ToString("HH:MM");
+                vHoraAbate = ViewBag.Registro.Data_Abate.ToString().Substring(11,5);
+            }
+        }
+        catch
+        {
+
+        }
+    }
+    <script src="~/js/site.js"></script>
+    <form asp-controller="Abate" asp-action="Registrar" autocomplete="on">
+        <input type="hidden" asp-for="Id" value="@vId" />
+        <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:25px; padding:15px;width:650px;">
+            <table border="1">
+                <thead>
+                    <tr style="background-color: cadetblue">
+                        <td width=600><label> Empresa</label></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width=600>
+                            <select asp-for="id_Empresa" class="form-control">
+                                @{
+
+                                    foreach (var item in (List<AbateModel>)ViewBag.ListaEmpresas)
+                                    {
+                                        if (item.Nome_Empresa.ToString()==vEmpresa.ToString())
+                                        {
+                                            <option value="@item.id_Empresa.ToString()" selected>@item.Nome_Empresa.ToString()</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.id_Empresa.ToString()">@item.Nome_Empresa.ToString()</option>    
+                                        }
+                                    }
+                                    }
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table border="1">
+                <thead>
+                    <tr style="background-color: cadetblue">
+                        <td width=600><label> Produtores</label></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width=600>
+                            <select asp-for="id_Produtor" class="form-control">
+                                @{
+                                    foreach (var item in (List<AbateModel>)ViewBag.ListaProdutores)
+                                    {
+                                        if (item.Nome_Produtor.ToString() == vProdutor.ToString())
+                                        {
+                                            <option value="@item.id_Produtor.ToString()" selected>@item.Nome_Produtor.ToString()</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.id_Produtor.ToString()">@item.Nome_Produtor.ToString()</option>
+                                        }
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <table border="1">
+                <thead>
+                    <tr style="background-color: cadetblue">
+                        <td width=100><label> Quantidade</label></td>
+                        <td width=250><label>Data Abate</label></td>
+                        <td width=250><label>Hora Abate</label></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width=100>
+                            <input type="text" name="Quantidade" id="Quantidade" value="@vQuantidade" onkeyup="formatar('######', this)"
+                                   maxlength="6" class="form-control" onkeypress="return SomenteNumero(event)" required>
+                            <span asp-validation-for="Quantidade" class="text-danger"></span>
+                        </td>
+                        <td width=250>
+                            <input type="date" class="form-control" asp-for="Data_Abate" value="@vData" />
+                            <span asp-validation-for="Data_Abate" class="text-danger"></span>
+                        </td>
+                        <td width=250>
+                            <input type="time" class="form-control" asp-for="Hora_Abate" value="@vHoraAbate" required />
+                            <span asp-validation-for="Hora_Abate" class="text-danger"></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+                <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:600px;">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td style="width:50px"><button type="submit" class="btn btn-block btn-success">Registrar</button></td>
+                                @if (ViewBag.Editar == "SIM")
+                                {
+                                    <td style="width:50px"><button type="button" class="btn btn-block btn-primary" onclick="VoltarEditar()">Voltar</button></td>
+                                }
+                                else
+                                {
+                                    <td style="width:50px"><button type="button" class="btn btn-block btn-primary" onclick="Voltar()">Voltar</button></td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+</div>
+    </form>
+</div>
+<script>
+    function Voltar() {
+        window.location.href = "../Abate/IndexAbate"
+    }
+    function VoltarEditar() {
+        window.location.href = "../IndexAbate"
+    }
+ </script>

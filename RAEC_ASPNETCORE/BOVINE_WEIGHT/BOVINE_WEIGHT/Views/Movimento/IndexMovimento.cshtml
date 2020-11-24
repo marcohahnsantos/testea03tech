@@ -1,0 +1,125 @@
+﻿@model MovimentoModel
+@using System.ComponentModel.DataAnnotations;
+@using PagedList;
+@using PagedList.Core.Mvc;
+@using cloudscribe.Web.Pagination;
+<link href="~/css/PagedList.css" rel="stylesheet" type="text/css" />
+@{
+    ViewData["Title"] = "Movimentação Abate";
+}
+@*<style>
+        body {
+            background-image: url('../../images/Bg.png')
+        }
+    </style>*@
+<style>
+    body {
+        background-color: #81080A;
+    }
+</style>
+<div class="container"  style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:1100px;">
+    <form asp-controller="Movimento" asp-action="VerMovimento">
+        <h2>Meus Abates</h2>
+        <div class="form-group">
+            <label>Data  (Inicio):</label>
+            <input style="width:150px" type="date" asp-for="Data_Ini" value="@ViewBag.Data1.ToString("yyyy-MM-dd")" />
+            <label>Data   (Final):</label>
+            <input style="width:150px" type="date" asp-for="Data_Fim" value="@ViewBag.Data2.ToString("yyyy-MM-dd")" />
+
+
+        </div>
+       <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:5px; padding:5px;width:200px;">
+            <tbody>
+                <tr>
+                    <td style="width:50px" ;height="15px"><button type="submit" class="btn btn-block btn-success">Pesquisar</button></td>
+                </tr>
+            </tbody>
+        </div>
+    </form>
+    </div>
+        <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:1100px;">
+
+
+            <form asp-controller="Movimento" asp-action="Pesquisar">
+                <h3>Abates</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>CÓDIGO</th>
+                            <th>EMPRESA</th>
+                            <th>PRODUTOR</th>
+                            <th>QUANT. ANIMAIS</th>
+                            <th>DATA ABATE</th>
+                        </tr>
+                    </thead>
+                    @{
+
+                        foreach (var item in (List<AbateModel>)ViewBag.ListaAbate)
+                        {
+                            <tbody>
+                                <tr>
+                                    @{
+                                        if (@item.Id != 0)
+                                        {
+                                            <td style="width=50px"><button type="button" class="btn btn-success" onclick="Editar(@item.Id.ToString())">Pesquisar</button></td>
+                                            <td style="width=50px">@item.Id.ToString()</td>
+                                            <td style="width=250px">@item.id_Empresa.ToString().PadLeft(5, '0')-@item.Nome_Empresa.ToString()</td>
+                                            <td style="width=250px">@item.id_Produtor.ToString().PadLeft(5, '0')-@item.Nome_Produtor.ToString()</td>
+                                            <td style="width=150px">@item.Quantidade.ToString()</td>
+                                            <td style="width=150px">@item.Data_Abate.ToString()</td>
+                                        }
+                                    }
+                                </tr>
+                            </tbody>
+                        }
+                    }
+                </table>
+            </form>
+        </div>
+
+        <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:1100px;">
+            <table class="table table-bordered" align="center" style="width:500px;">
+                <tbody>
+                    <tr>
+                        <td style="width:50px"><button type="button" class="btn btn-block btn-primary" onclick="Voltar()">Voltar</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <form>
+            <div>
+                <cs-pager cs-paging-pagesize="5"
+                          cs-paging-pagenumber="@ViewBag.CurrentPage"
+                          cs-paging-totalitems="@ViewBag.TotalItems"
+                          cs-pagenumber-param="page"
+                          cs-show-first-last="true"
+                          cs-suppress-empty-nextprev="true"
+                          cs-suppress-inactive-firstlast="true"
+                          cs-first-page-text="Primeiro"
+                          cs-last-page-text="Ultimo"
+                          cs-pager-li-current-class="active"
+                          cs-pager-li-non-active-class="disabled"
+                          asp-controller="Movimento"
+                          asp-action="IndexMovimento">
+                </cs-pager>
+
+            </div>
+
+        </form>
+
+        <script>
+            function CriarRegistro() {
+                window.location.href = "../Abate/RegistrarAbate"
+            }
+            function Voltar() {
+                window.location.href = "../Home/Menu"
+            }
+            function ExcluirRegistro(id_conta) {
+                window.location.href = "../Abate/ExcluirRegistroAbate/" + id_conta;
+            }
+            function Editar(id_conta) {
+                window.location.href = "../Movimento/PesquisarMovimento/" + id_conta;
+            }
+        </script>
+

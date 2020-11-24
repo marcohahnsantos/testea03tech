@@ -1,0 +1,46 @@
+﻿
+<style>
+    body {
+        background-color: #81080A;
+    }
+</style>
+
+<div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:25px; padding:15px;width:600px;">
+
+    <h3>Deseja Excluir o Abate Selecionado ?</h3>
+    <p><strong>Data:</strong> @ViewBag.Registro.Data_Abate.ToString()</p>
+    <p><strong>Empresa:</strong> @ViewBag.Registro.Nome_Empresa.ToString()</p>
+    <p><strong>Produtor:</strong> @ViewBag.Registro.Nome_Produtor.ToString()</p>
+    <p><strong>Quantidade:</strong> @ViewBag.Registro.Quantidade.ToString()</p>
+    @{
+        var vId = 0;
+
+        try
+        {
+            vId = int.Parse(ViewBag.Registro.Id.ToString());
+        }
+        catch { }
+    }
+    <div class="container" style="background-color:rgba(239,239,239,0.95); border-radius:10px; padding:20px;width:350px;">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <td style="width:50px"><button type="button" onclick="Cancelar()" class="btn btn-block btn-default">Cancelar</button></td>
+                    <td style="width:50px"> <button type="button" onclick="Excluir(@vId)" class="btn btn-block btn-danger">Excluir</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<script>
+        function Excluir(id) {
+            window.location.href = "../ExcluirAbate/" + id;
+
+        }
+        function Cancelar() {
+            window.location.href = "../IndexAbate";
+        }
+
+</script>
+
